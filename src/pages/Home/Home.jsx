@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
+import { useCoins } from "../../context/CoinContext";
 
 const Home = () => {
+  const { allCoins, currency } = useCoins();
+
+  const [displayCoin, setDisplayCoin] = useState([]);
+
+  useEffect(() => {
+    setDisplayCoin(allCoins);
+  }, [allCoins, currency]);
+
   return (
     <div className="home">
       <div className="hero">
@@ -12,19 +21,43 @@ const Home = () => {
           Welcome to the world's largest cruptocurrency marketplace. Sign up to
           explore more about cryptos.
         </p>
-        <form >
-            <input type="text" placeholder="Search crypto...."/>
-            <button type="submit">Search</button>
+        <form>
+          <input type="text" placeholder="Search crypto...." />
+          <button type="submit">Search</button>
         </form>
       </div>
       <div className="crypto-table">
         <div className="table-layout">
-            <p>#</p>
-            <p>Coins</p>
-            <p>Price</p>
-            <p style={{textAlign:"center"}}>24H Change</p>
-            <p className="market-cap">Market Cap</p>
+          <p>#</p>
+          <p>Coins</p>
+          <p>Price</p>
+          <p style={{ textAlign: "center" }}>24H Change</p>
+          <p className="market-cap">Market Cap</p>
         </div>
+        {displayCoin.slice(0, 10).map((coin, index) => {
+          return (
+            <div className="table-layout" key={coin.id}>
+              <p>{coin.market_cap_rank}</p>
+              <div className="crypto">
+                <img src={coin.image} alt={coin.name} className="crypto-img" />
+                <p>
+                  {coin.name} - {coin.symbol}
+                </p>
+              </div>
+              <p>
+                {currency.symbol} {coin.current_price.toLocaleString()}
+              </p>
+              <p style={{ textAlign: "center" }}
+              className={coin.price_change_percentage_24h>0?"green":"red"}
+              >
+                {Math.floor(coin.price_change_percentage_24h * 100) / 100}
+              </p>
+              <p className="market-cap">
+                {currency.symbol} {coin.market_cap.toLocaleString()}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
