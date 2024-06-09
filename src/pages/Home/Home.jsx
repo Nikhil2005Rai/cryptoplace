@@ -4,8 +4,23 @@ import { useCoins } from "../../context/CoinContext";
 
 const Home = () => {
   const { allCoins, currency } = useCoins();
-
   const [displayCoin, setDisplayCoin] = useState([]);
+  const [input, setInput] = useState("");
+
+  const inputHandler = (e) => {
+    setInput(e.target.value);
+    if (e.target.value === "") {
+      setDisplayCoin(allCoins);
+    }
+  };
+
+  const searchHandler = async (e) => {
+    e.preventDefault();
+    const coins = await allCoins.filter((item) => {
+      return item.name.toLowerCase().includes(input.toLowerCase());
+    });
+    setDisplayCoin(coins);
+  };
 
   useEffect(() => {
     setDisplayCoin(allCoins);
@@ -21,8 +36,21 @@ const Home = () => {
           Welcome to the world's largest cruptocurrency marketplace. Sign up to
           explore more about cryptos.
         </p>
-        <form>
-          <input type="text" placeholder="Search crypto...." />
+        <form onSubmit={searchHandler}>
+          <input
+            type="text"
+            placeholder="Search crypto...."
+            onChange={inputHandler}
+            list="coinlist"
+            value={input}
+            required
+          />
+          <datalist id="coinlist">
+            {allCoins.map((item, index) => (
+              <option key={index} value={item.name} />
+            ))}
+          </datalist>
+
           <button type="submit">Search</button>
         </form>
       </div>
@@ -47,8 +75,11 @@ const Home = () => {
               <p>
                 {currency.symbol} {coin.current_price.toLocaleString()}
               </p>
-              <p style={{ textAlign: "center" }}
-              className={coin.price_change_percentage_24h>0?"green":"red"}
+              <p
+                style={{ textAlign: "center" }}
+                className={
+                  coin.price_change_percentage_24h > 0 ? "green" : "red"
+                }
               >
                 {Math.floor(coin.price_change_percentage_24h * 100) / 100}
               </p>
