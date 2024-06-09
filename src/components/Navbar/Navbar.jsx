@@ -1,19 +1,19 @@
-import React from 'react'
-import './Navbar.css'
-import logo from '../../assets/logo.png'
-import arrow from '../../assets/arrow.png'
-import { useCoins } from '../../context/CoinContext'
+import React from "react";
+import "./Navbar.css";
+import logo from "../../assets/logo.png";
+import arrow from "../../assets/arrow.png";
+import { useCoins } from "../../context/CoinContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-
-  const { setCurrency } = useCoins()
+  const { setCurrency } = useCoins();
   const currencyHandeler = (e) => {
     switch (e.target.value) {
       case "usd":
         setCurrency({
           name: "usd",
-          symbol: "$"
-        })
+          symbol: "$",
+        });
         break;
       case "eur":
         setCurrency({
@@ -27,7 +27,7 @@ const Navbar = () => {
           symbol: "₹",
         });
         break;
-    
+
       default:
         setCurrency({
           name: "usd",
@@ -35,26 +35,32 @@ const Navbar = () => {
         });
         break;
     }
-  }
+  };
   return (
-    <div className='navbar'>
-        <img src={logo} alt="logo" className='logo'/>
-        <ul>
-            <li>Home</li>
-            <li>Features</li>
-            <li>Pricing</li>
-            <li>Blog</li>
-        </ul>
-        <div className="nav-right">
-            <select name="" id="" onChange={currencyHandeler}>
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="inr">INR</option>
-            </select>
-            <button>Sign up <img src={arrow} /></button>
-        </div>
+    <div className="navbar">
+      <Link to={"/"}>
+        <img src={logo} alt="logo" className="logo" />
+      </Link>
+      <ul>
+        <Link to={"/"}>
+          <li>Home</li>
+        </Link>
+        <li>Features</li>
+        <li>Pricing</li>
+        <li>Blog</li>
+      </ul>
+      <div className="nav-right">
+        <select name="" id="" onChange={currencyHandeler}>
+          <option value="usd">USD</option>
+          <option value="eur">EUR</option>
+          <option value="inr">INR</option>
+        </select>
+        <button>
+          Sign up <img src={arrow} />
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
